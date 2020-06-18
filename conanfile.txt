@@ -1,0 +1,5 @@
+[requires]
+tinyxml2/8.0.0
+
+[generators]
+cmake
