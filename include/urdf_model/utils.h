@@ -46,16 +46,15 @@
 namespace urdf {
 
 // Replacement for boost::split( ... , ... , boost::is_any_of(" "))
-inline
-void split_string(std::vector<std::string> &result,
-                  const std::string &input,
-                  const std::string &isAnyOf)
+inline void split_string(std::vector<std::string> &result,
+                         const std::string &input,
+                         const std::string &isAnyOf)
 {
   std::string::size_type start = 0;
   std::string::size_type end = input.find_first_of(isAnyOf, start);
   while (end != std::string::npos)
   {
-    result.push_back(input.substr(start, end-start));
+    result.push_back(input.substr(start, end - start));
     start = end + 1;
     end = input.find_first_of(isAnyOf, start);
   }
@@ -80,7 +79,8 @@ static inline double strToDouble(const char *in)
   double out;
   ss >> out;
 
-  if (ss.fail() || !ss.eof()) {
+  if (ss.fail() || !ss.eof())
+  {
     throw std::runtime_error("Failed converting string to double");
   }
 

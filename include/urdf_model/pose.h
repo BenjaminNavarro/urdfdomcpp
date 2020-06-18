@@ -46,36 +46,45 @@
 #include <urdf_exception/exception.h>
 #include <urdf_model/utils.h>
 
-namespace urdf{
+namespace urdf {
 
 class Vector3
 {
 public:
-  Vector3(double _x,double _y, double _z) {this->x=_x;this->y=_y;this->z=_z;};
-  Vector3() {this->clear();};
+  Vector3(double _x, double _y, double _z)
+  {
+    this->x = _x;
+    this->y = _y;
+    this->z = _z;
+  };
+  Vector3() { this->clear(); };
   double x;
   double y;
   double z;
 
-  void clear() {this->x=this->y=this->z=0.0;};
+  void clear() { this->x = this->y = this->z = 0.0; };
   void init(const std::string &vector_str)
   {
     this->clear();
     std::vector<std::string> pieces;
     std::vector<double> xyz;
-    urdf::split_string( pieces, vector_str, " ");
-    for (unsigned int i = 0; i < pieces.size(); ++i){
-      if (pieces[i] != ""){
-        try {
+    urdf::split_string(pieces, vector_str, " ");
+    for (unsigned int i = 0; i < pieces.size(); ++i)
+    {
+      if (pieces[i] != "")
+      {
+        try
+        {
           xyz.push_back(strToDouble(pieces[i].c_str()));
-        } catch(std::runtime_error &) {
+        } catch (std::runtime_error &)
+        {
           throw ParseError("Unable to parse component [" + pieces[i] + "] to a double (while parsing a vector value)");
         }
       }
     }
 
     if (xyz.size() != 3)
-      throw ParseError("Parser found " + std::to_string(xyz.size())  + " elements but 3 expected while parsing vector [" + vector_str + "]");
+      throw ParseError("Parser found " + std::to_string(xyz.size()) + " elements but 3 expected while parsing vector [" + vector_str + "]");
 
     this->x = xyz[0];
     this->y = xyz[1];
@@ -84,23 +93,29 @@ public:
 
   Vector3 operator+(Vector3 vec)
   {
-    return Vector3(this->x+vec.x,this->y+vec.y,this->z+vec.z);
+    return Vector3(this->x + vec.x, this->y + vec.y, this->z + vec.z);
   };
 };
 
 class Rotation
 {
 public:
-  Rotation(double _x,double _y, double _z, double _w) {this->x=_x;this->y=_y;this->z=_z;this->w=_w;};
-  Rotation() {this->clear();};
-  void getQuaternion(double &quat_x,double &quat_y,double &quat_z, double &quat_w) const
+  Rotation(double _x, double _y, double _z, double _w)
+  {
+    this->x = _x;
+    this->y = _y;
+    this->z = _z;
+    this->w = _w;
+  };
+  Rotation() { this->clear(); };
+  void getQuaternion(double &quat_x, double &quat_y, double &quat_z, double &quat_w) const
   {
     quat_x = this->x;
     quat_y = this->y;
     quat_z = this->z;
     quat_w = this->w;
   };
-  void getRPY(double &roll,double &pitch,double &yaw) const
+  void getRPY(double &roll, double &pitch, double &yaw) const
   {
     double sqw;
     double sqx;
@@ -113,24 +128,28 @@ public:
     sqw = this->w * this->w;
 
     // Cases derived from https://orbitalstation.wordpress.com/tag/quaternion/
-    double sarg = -2 * (this->x*this->z - this->w*this->y);
+    double sarg = -2 * (this->x * this->z - this->w * this->y);
     const double pi_2 = 1.57079632679489661923;
-    if (sarg <= -0.99999) {
+    if (sarg <= -0.99999)
+    {
       pitch = -pi_2;
-      roll  = 0;
-      yaw   = 2 * atan2(this->x, -this->y);
-    } else if (sarg >= 0.99999) {
-      pitch = pi_2;
-      roll  = 0;
-      yaw   = 2 * atan2(-this->x, this->y);
-    } else {
-      pitch = asin(sarg);
-      roll  = atan2(2 * (this->y*this->z + this->w*this->x), sqw - sqx - sqy + sqz);
-      yaw   = atan2(2 * (this->x*this->y + this->w*this->z), sqw + sqx - sqy - sqz);
+      roll = 0;
+      yaw = 2 * atan2(this->x, -this->y);
     }
-
+    else if (sarg >= 0.99999)
+    {
+      pitch = pi_2;
+      roll = 0;
+      yaw = 2 * atan2(-this->x, this->y);
+    }
+    else
+    {
+      pitch = asin(sarg);
+      roll = atan2(2 * (this->y * this->z + this->w * this->x), sqw - sqx - sqy + sqz);
+      yaw = atan2(2 * (this->x * this->y + this->w * this->z), sqw + sqx - sqy - sqz);
+    }
   };
-  void setFromQuaternion(double quat_x,double quat_y,double quat_z,double quat_w)
+  void setFromQuaternion(double quat_x, double quat_y, double quat_z, double quat_w)
   {
     this->x = quat_x;
     this->y = quat_y;
@@ -154,7 +173,7 @@ public:
     this->normalize();
   };
 
-  double x,y,z,w;
+  double x, y, z, w;
 
   void init(const std::string &rotation_str)
   {
@@ -164,7 +183,11 @@ public:
     setFromRPY(rpy.x, rpy.y, rpy.z);
   }
 
-  void clear() { this->x=this->y=this->z=0.0;this->w=1.0; }
+  void clear()
+  {
+    this->x = this->y = this->z = 0.0;
+    this->w = 1.0;
+  }
 
   void normalize()
   {
@@ -189,7 +212,7 @@ public:
   };
 
   // Multiplication operator (copied from gazebo)
-  Rotation operator*( const Rotation &qt ) const
+  Rotation operator*(const Rotation &qt) const
   {
     Rotation c;
 
@@ -224,7 +247,7 @@ public:
   {
     Rotation q;
 
-    double norm = this->w*this->w+this->x*this->x+this->y*this->y+this->z*this->z;
+    double norm = this->w * this->w + this->x * this->x + this->y * this->y + this->z * this->z;
 
     if (norm > 0.0)
     {
@@ -236,8 +259,6 @@ public:
 
     return q;
   };
-
-
 };
 
 class Pose
@@ -245,7 +266,7 @@ class Pose
 public:
   Pose() { this->clear(); };
 
-  Vector3  position;
+  Vector3 position;
   Rotation rotation;
 
   void clear()

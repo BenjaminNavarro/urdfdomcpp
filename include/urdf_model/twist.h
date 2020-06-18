@@ -43,7 +43,7 @@
 #include <math.h>
 #include <urdf_model/pose.h>
 
-namespace urdf{
+namespace urdf {
 
 
 class Twist
@@ -51,9 +51,9 @@ class Twist
 public:
   Twist() { this->clear(); };
 
-  Vector3  linear;
+  Vector3 linear;
   // Angular velocity represented by Euler angles
-  Vector3  angular;
+  Vector3 angular;
 
   void clear()
   {
@@ -65,4 +65,3 @@ public:
 }
 
 #endif
-

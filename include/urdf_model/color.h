@@ -45,13 +45,12 @@
 #include <urdf_model/utils.h>
 #include <urdf_exception/exception.h>
 
-namespace urdf
-{
+namespace urdf {
 
 class Color
 {
 public:
-  Color() {this->clear();};
+  Color() { this->clear(); };
   float r;
   float g;
   float b;
@@ -67,7 +66,7 @@ public:
     this->clear();
     std::vector<std::string> pieces;
     std::vector<float> rgba;
-    urdf::split_string( pieces, vector_str, " ");
+    urdf::split_string(pieces, vector_str, " ");
     for (unsigned int i = 0; i < pieces.size(); ++i)
     {
       if (!pieces[i].empty())
@@ -78,8 +77,8 @@ public:
           if ((piece < 0) || (piece > 1))
             throw ParseError("Component [" + pieces[i] + "] is outside the valid range for colors [0, 1]");
           rgba.push_back(static_cast<float>(piece));
-        }
-        catch (std::runtime_error &/*e*/) {
+        } catch (std::runtime_error & /*e*/)
+        {
           throw ParseError("Unable to parse component [" + pieces[i] + "] to a double (while parsing a color value)");
         }
       }
@@ -102,4 +101,3 @@ public:
 }
 
 #endif
-

@@ -45,11 +45,11 @@
 #include <iostream>
 #include <tinyxml2.h>
 
-namespace urdf{
+namespace urdf {
 
-bool parsePose(Pose &pose, tinyxml2::XMLElement* xml);
+bool parsePose(Pose &pose, tinyxml2::XMLElement *xml);
 
-bool parseCamera(Camera &camera, tinyxml2::XMLElement* config)
+bool parseCamera(Camera &camera, tinyxml2::XMLElement *config)
 {
   camera.clear();
   camera.type = VisualSensor::CAMERA;
@@ -57,19 +57,17 @@ bool parseCamera(Camera &camera, tinyxml2::XMLElement* config)
   tinyxml2::XMLElement *image = config->FirstChildElement("image");
   if (image)
   {
-    const char* width_char = image->Attribute("width");
+    const char *width_char = image->Attribute("width");
     if (width_char)
     {
       try
       {
         camera.width = std::stoul(width_char);
-      }
-      catch (std::invalid_argument &e)
+      } catch (std::invalid_argument &e)
       {
         std::cerr << "Camera image width [" << width_char << "] is not a valid int: " << e.what() << std::endl;
         return false;
-      }
-      catch (std::out_of_range &e)
+      } catch (std::out_of_range &e)
       {
         std::cerr << "Camera image width [" << width_char << "] is out of range: " << e.what() << std::endl;
         return false;
@@ -81,19 +79,17 @@ bool parseCamera(Camera &camera, tinyxml2::XMLElement* config)
       return false;
     }
 
-    const char* height_char = image->Attribute("height");
+    const char *height_char = image->Attribute("height");
     if (height_char)
     {
       try
       {
         camera.height = std::stoul(height_char);
-      }
-      catch (std::invalid_argument &e)
+      } catch (std::invalid_argument &e)
       {
         std::cerr << "Camera image height [" << height_char << "] is not a valid int: " << e.what() << std::endl;
         return false;
-      }
-      catch (std::out_of_range &e)
+      } catch (std::out_of_range &e)
       {
         std::cerr << "Camera image height [" << height_char << "] is out of range: " << e.what() << std::endl;
         return false;
@@ -105,21 +101,23 @@ bool parseCamera(Camera &camera, tinyxml2::XMLElement* config)
       return false;
     }
 
-    const char* format_char = image->Attribute("format");
+    const char *format_char = image->Attribute("format");
     if (format_char)
       camera.format = std::string(format_char);
     else
     {
       std::cerr << "Camera sensor needs an image format attribute" << std::endl;
       return false;
-    }    
+    }
 
-    const char* hfov_char = image->Attribute("hfov");
+    const char *hfov_char = image->Attribute("hfov");
     if (hfov_char)
     {
-      try {
+      try
+      {
         camera.hfov = strToDouble(hfov_char);
-      } catch(std::runtime_error &) {
+      } catch (std::runtime_error &)
+      {
         std::cerr << "Camera image hfov [" << hfov_char << "] is not a valid float" << std::endl;
         return false;
       }
@@ -130,12 +128,14 @@ bool parseCamera(Camera &camera, tinyxml2::XMLElement* config)
       return false;
     }
 
-    const char* near_char = image->Attribute("near");
+    const char *near_char = image->Attribute("near");
     if (near_char)
     {
-      try {
+      try
+      {
         camera.near = strToDouble(near_char);
-      } catch(std::runtime_error &) {
+      } catch (std::runtime_error &)
+      {
         std::cerr << "Camera image near [" << near_char << "] is not a valid float" << std::endl;
         return false;
       }
@@ -146,12 +146,14 @@ bool parseCamera(Camera &camera, tinyxml2::XMLElement* config)
       return false;
     }
 
-    const char* far_char = image->Attribute("far");
+    const char *far_char = image->Attribute("far");
     if (far_char)
     {
-      try {
+      try
+      {
         camera.far = strToDouble(far_char);
-      } catch(std::runtime_error &) {
+      } catch (std::runtime_error &)
+      {
         std::cerr << "Camera image far [" << far_char << "] is not a valid float" << std::endl;
         return false;
       }
@@ -161,7 +163,6 @@ bool parseCamera(Camera &camera, tinyxml2::XMLElement* config)
       std::cerr << "Camera sensor needs an image far attribute" << std::endl;
       return false;
     }
-    
   }
   else
   {
@@ -171,7 +172,7 @@ bool parseCamera(Camera &camera, tinyxml2::XMLElement* config)
   return true;
 }
 
-bool parseRay(Ray &ray, tinyxml2::XMLElement* config)
+bool parseRay(Ray &ray, tinyxml2::XMLElement *config)
 {
   ray.clear();
   ray.type = VisualSensor::RAY;
@@ -179,109 +180,117 @@ bool parseRay(Ray &ray, tinyxml2::XMLElement* config)
   tinyxml2::XMLElement *horizontal = config->FirstChildElement("horizontal");
   if (horizontal)
   {
-    const char* samples_char = horizontal->Attribute("samples");
+    const char *samples_char = horizontal->Attribute("samples");
     if (samples_char)
     {
       try
       {
         ray.horizontal_samples = std::stoul(samples_char);
-      }
-      catch (std::invalid_argument &e)
+      } catch (std::invalid_argument &e)
       {
         std::cerr << "Ray horizontal samples [" << samples_char << "] is not a valid float: " << e.what() << std::endl;
         return false;
-      }
-      catch (std::out_of_range &e)
+      } catch (std::out_of_range &e)
       {
         std::cerr << "Ray horizontal samples [" << samples_char << "] is out of range: " << e.what() << std::endl;
         return false;
       }
     }
 
-    const char* resolution_char = horizontal->Attribute("resolution");
+    const char *resolution_char = horizontal->Attribute("resolution");
     if (resolution_char)
     {
-      try {
+      try
+      {
         ray.horizontal_resolution = strToDouble(resolution_char);
-      } catch(std::runtime_error &) {
+      } catch (std::runtime_error &)
+      {
         std::cerr << "Ray horizontal resolution [" << resolution_char << "] is not a valid float" << std::endl;
         return false;
       }
     }
 
-    const char* min_angle_char = horizontal->Attribute("min_angle");
+    const char *min_angle_char = horizontal->Attribute("min_angle");
     if (min_angle_char)
     {
-      try {
+      try
+      {
         ray.horizontal_min_angle = strToDouble(min_angle_char);
-      } catch(std::runtime_error &) {
+      } catch (std::runtime_error &)
+      {
         std::cerr << "Ray horizontal min_angle [" << min_angle_char << "] is not a valid float" << std::endl;
         return false;
       }
     }
 
-    const char* max_angle_char = horizontal->Attribute("max_angle");
+    const char *max_angle_char = horizontal->Attribute("max_angle");
     if (max_angle_char)
     {
-      try {
+      try
+      {
         ray.horizontal_max_angle = strToDouble(max_angle_char);
-      } catch(std::runtime_error &) {
+      } catch (std::runtime_error &)
+      {
         std::cerr << "Ray horizontal max_angle [" << max_angle_char << "] is not a valid float" << std::endl;
         return false;
       }
     }
   }
-  
+
   tinyxml2::XMLElement *vertical = config->FirstChildElement("vertical");
   if (vertical)
   {
-    const char* samples_char = vertical->Attribute("samples");
+    const char *samples_char = vertical->Attribute("samples");
     if (samples_char)
     {
       try
       {
         ray.vertical_samples = std::stoul(samples_char);
-      }
-      catch (std::invalid_argument &e)
+      } catch (std::invalid_argument &e)
       {
         std::cerr << "Ray vertical samples [" << samples_char << "] is not a valid float: " << e.what() << std::endl;
         return false;
-      }
-      catch (std::out_of_range &e)
+      } catch (std::out_of_range &e)
       {
         std::cerr << "Ray vertical samples [" << samples_char << "] is out of range: " << e.what() << std::endl;
         return false;
       }
     }
 
-    const char* resolution_char = vertical->Attribute("resolution");
+    const char *resolution_char = vertical->Attribute("resolution");
     if (resolution_char)
     {
-      try {
+      try
+      {
         ray.vertical_resolution = strToDouble(resolution_char);
-      } catch(std::runtime_error &) {
+      } catch (std::runtime_error &)
+      {
         std::cerr << "Ray vertical resolution [" << resolution_char << "] is not a valid float" << std::endl;
         return false;
       }
     }
 
-    const char* min_angle_char = vertical->Attribute("min_angle");
+    const char *min_angle_char = vertical->Attribute("min_angle");
     if (min_angle_char)
     {
-      try {
+      try
+      {
         ray.vertical_min_angle = strToDouble(min_angle_char);
-      } catch(std::runtime_error &) {
+      } catch (std::runtime_error &)
+      {
         std::cerr << "Ray vertical min_angle [" << min_angle_char << "] is not a valid float" << std::endl;
         return false;
       }
     }
 
-    const char* max_angle_char = vertical->Attribute("max_angle");
+    const char *max_angle_char = vertical->Attribute("max_angle");
     if (max_angle_char)
     {
-      try {
+      try
+      {
         ray.vertical_max_angle = strToDouble(max_angle_char);
-      } catch(std::runtime_error &) {
+      } catch (std::runtime_error &)
+      {
         std::cerr << "Ray vertical max_angle [" << max_angle_char << "] is not a valid float" << std::endl;
         return false;
       }
@@ -320,7 +329,7 @@ VisualSensorSharedPtr parseVisualSensor(tinyxml2::XMLElement *g)
 }
 
 
-bool parseSensor(Sensor &sensor, tinyxml2::XMLElement* config)
+bool parseSensor(Sensor &sensor, tinyxml2::XMLElement *config)
 {
   sensor.clear();
 
@@ -356,5 +365,3 @@ bool parseSensor(Sensor &sensor, tinyxml2::XMLElement* config)
 
 
 }
-
-

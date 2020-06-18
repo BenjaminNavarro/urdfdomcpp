@@ -48,9 +48,9 @@
 #include <iostream>
 #include <tinyxml2.h>
 
-namespace urdf{
+namespace urdf {
 
-bool parsePose(Pose &pose, tinyxml2::XMLElement* xml);
+bool parsePose(Pose &pose, tinyxml2::XMLElement *xml);
 
 bool parseMaterial(Material &material, tinyxml2::XMLElement *config, bool only_name_is_ok)
 {
@@ -64,7 +64,7 @@ bool parseMaterial(Material &material, tinyxml2::XMLElement *config, bool only_n
     std::cerr << "Material must contain a name attribute" << std::endl;
     return false;
   }
-  
+
   material.name = config->Attribute("name");
 
   // texture
@@ -82,24 +82,27 @@ bool parseMaterial(Material &material, tinyxml2::XMLElement *config, bool only_n
   tinyxml2::XMLElement *c = config->FirstChildElement("color");
   if (c)
   {
-    if (c->Attribute("rgba")) {
+    if (c->Attribute("rgba"))
+    {
 
-      try {
+      try
+      {
         material.color.init(c->Attribute("rgba"));
         has_rgb = true;
-      }
-      catch (ParseError &e) {  
+      } catch (ParseError &e)
+      {
         material.color.clear();
         std::cerr << std::string("Material [" + material.name + "] has malformed color rgba values: " + e.what()).c_str() << std::endl;
       }
     }
   }
 
-  if (!has_rgb && !has_filename) {
+  if (!has_rgb && !has_filename)
+  {
     if (!only_name_is_ok) // no need for an error if only name is ok
     {
-      if (!has_rgb) std::cerr << std::string("Material ["+material.name+"] color has no rgba").c_str() << std::endl;
-      if (!has_filename) std::cerr << std::string("Material ["+material.name+"] not defined in file").c_str() << std::endl;
+      if (!has_rgb) std::cerr << std::string("Material [" + material.name + "] color has no rgba").c_str() << std::endl;
+      if (!has_filename) std::cerr << std::string("Material [" + material.name + "] not defined in file").c_str() << std::endl;
     }
     return false;
   }
@@ -118,9 +121,11 @@ bool parseSphere(Sphere &s, tinyxml2::XMLElement *c)
     return false;
   }
 
-  try {
+  try
+  {
     s.radius = strToDouble(c->Attribute("radius"));
-  } catch(std::runtime_error &) {
+  } catch (std::runtime_error &)
+  {
     std::stringstream stm;
     stm << "radius [" << c->Attribute("radius") << "] is not a valid float";
     std::cerr << stm.str().c_str() << std::endl;
@@ -133,7 +138,7 @@ bool parseSphere(Sphere &s, tinyxml2::XMLElement *c)
 bool parseBox(Box &b, tinyxml2::XMLElement *c)
 {
   b.clear();
-  
+
   b.type = Geometry::BOX;
   if (!c->Attribute("size"))
   {
@@ -143,8 +148,7 @@ bool parseBox(Box &b, tinyxml2::XMLElement *c)
   try
   {
     b.dim.init(c->Attribute("size"));
-  }
-  catch (ParseError &e)
+  } catch (ParseError &e)
   {
     b.dim.clear();
     std::cerr << e.what() << std::endl;
@@ -165,18 +169,22 @@ bool parseCylinder(Cylinder &y, tinyxml2::XMLElement *c)
     return false;
   }
 
-  try {
+  try
+  {
     y.length = strToDouble(c->Attribute("length"));
-  } catch(std::runtime_error &) {
+  } catch (std::runtime_error &)
+  {
     std::stringstream stm;
     stm << "length [" << c->Attribute("length") << "] is not a valid float";
     std::cerr << stm.str().c_str() << std::endl;
     return false;
   }
 
-  try {
+  try
+  {
     y.radius = strToDouble(c->Attribute("radius"));
-  } catch(std::runtime_error &) {
+  } catch (std::runtime_error &)
+  {
     std::stringstream stm;
     stm << "radius [" << c->Attribute("radius") << "] is not a valid float";
     std::cerr << stm.str().c_str() << std::endl;
@@ -192,18 +200,21 @@ bool parseMesh(Mesh &m, tinyxml2::XMLElement *c)
   m.clear();
 
   m.type = Geometry::MESH;
-  if (!c->Attribute("filename")) {
+  if (!c->Attribute("filename"))
+  {
     std::cerr << "Mesh must contain a filename attribute" << std::endl;
     return false;
   }
 
   m.filename = c->Attribute("filename");
 
-  if (c->Attribute("scale")) {
-    try {
+  if (c->Attribute("scale"))
+  {
+    try
+    {
       m.scale.init(c->Attribute("scale"));
-    }
-    catch (ParseError &e) {
+    } catch (ParseError &e)
+    {
       m.scale.clear();
       std::cerr << "Mesh scale was specified, but could not be parsed: " << e.what() << std::endl;
       return false;
@@ -255,14 +266,14 @@ GeometrySharedPtr parseGeometry(tinyxml2::XMLElement *g)
     Mesh *m = new Mesh();
     geom.reset(m);
     if (parseMesh(*m, shape))
-      return geom;    
+      return geom;
   }
   else
   {
     std::cerr << "Unknown geometry type '" << type_name << "'" << std::endl;
     return geom;
   }
-  
+
   return GeometrySharedPtr();
 }
 
@@ -290,9 +301,11 @@ bool parseInertial(Inertial &i, tinyxml2::XMLElement *config)
     return false;
   }
 
-  try {
+  try
+  {
     i.mass = strToDouble(mass_xml->Attribute("value"));
-  } catch(std::runtime_error &) {
+  } catch (std::runtime_error &)
+  {
     std::stringstream stm;
     stm << "Inertial: mass [" << mass_xml->Attribute("value")
         << "] is not a float";
@@ -308,15 +321,15 @@ bool parseInertial(Inertial &i, tinyxml2::XMLElement *config)
   }
 
   std::vector<std::pair<std::string, double>> attrs{
-      std::make_pair("ixx", 0.0),
-      std::make_pair("ixy", 0.0),
-      std::make_pair("ixz", 0.0),
-      std::make_pair("iyy", 0.0),
-      std::make_pair("iyz", 0.0),
-      std::make_pair("izz", 0.0)
+    std::make_pair("ixx", 0.0),
+    std::make_pair("ixy", 0.0),
+    std::make_pair("ixz", 0.0),
+    std::make_pair("iyy", 0.0),
+    std::make_pair("iyz", 0.0),
+    std::make_pair("izz", 0.0)
   };
 
-  for (auto& attr : attrs)
+  for (auto &attr : attrs)
   {
     if (!inertia_xml->Attribute(attr.first.c_str()))
     {
@@ -326,9 +339,11 @@ bool parseInertial(Inertial &i, tinyxml2::XMLElement *config)
       return false;
     }
 
-    try {
+    try
+    {
       attr.second = strToDouble(inertia_xml->Attribute(attr.first.c_str()));
-    } catch(std::runtime_error &) {
+    } catch (std::runtime_error &)
+    {
       std::stringstream stm;
       stm << "Inertial: inertia element " << attr.first << " is not a valid double";
       std::cerr << stm.str().c_str() << std::endl;
@@ -352,7 +367,8 @@ bool parseVisual(Visual &vis, tinyxml2::XMLElement *config)
 
   // Origin
   tinyxml2::XMLElement *o = config->FirstChildElement("origin");
-  if (o) {
+  if (o)
+  {
     if (!parsePose(vis.origin, o))
       return false;
   }
@@ -369,14 +385,16 @@ bool parseVisual(Visual &vis, tinyxml2::XMLElement *config)
 
   // Material
   tinyxml2::XMLElement *mat = config->FirstChildElement("material");
-  if (mat) {
+  if (mat)
+  {
     // get material name
-    if (!mat->Attribute("name")) {
+    if (!mat->Attribute("name"))
+    {
       std::cerr << "Visual material must contain a name attribute" << std::endl;
       return false;
     }
     vis.material_name = mat->Attribute("name");
-    
+
     // try to parse material element in place
     vis.material.reset(new Material());
     if (!parseMaterial(*vis.material, mat, true))
@@ -384,21 +402,22 @@ bool parseVisual(Visual &vis, tinyxml2::XMLElement *config)
       vis.material.reset();
     }
   }
-  
+
   return true;
 }
 
-bool parseCollision(Collision &col, tinyxml2::XMLElement* config)
-{  
+bool parseCollision(Collision &col, tinyxml2::XMLElement *config)
+{
   col.clear();
 
   // Origin
   tinyxml2::XMLElement *o = config->FirstChildElement("origin");
-  if (o) {
+  if (o)
+  {
     if (!parsePose(col.origin, o))
       return false;
   }
-  
+
   // Geometry
   tinyxml2::XMLElement *geom = config->FirstChildElement("geometry");
   col.geometry = parseGeometry(geom);
@@ -412,9 +431,9 @@ bool parseCollision(Collision &col, tinyxml2::XMLElement* config)
   return true;
 }
 
-bool parseLink(Link &link, tinyxml2::XMLElement* config)
+bool parseLink(Link &link, tinyxml2::XMLElement *config)
 {
-  
+
   link.clear();
 
   const char *name_char = config->Attribute("name");
@@ -438,7 +457,7 @@ bool parseLink(Link &link, tinyxml2::XMLElement* config)
   }
 
   // Multiple Visuals (optional)
-  for (tinyxml2::XMLElement* vis_xml = config->FirstChildElement("visual"); vis_xml; vis_xml = vis_xml->NextSiblingElement("visual"))
+  for (tinyxml2::XMLElement *vis_xml = config->FirstChildElement("visual"); vis_xml; vis_xml = vis_xml->NextSiblingElement("visual"))
   {
 
     VisualSharedPtr vis;
@@ -459,25 +478,25 @@ bool parseLink(Link &link, tinyxml2::XMLElement* config)
   // Assign the first visual to the .visual ptr, if it exists
   if (!link.visual_array.empty())
     link.visual = link.visual_array[0];
-  
+
   // Multiple Collisions (optional)
-  for (tinyxml2::XMLElement* col_xml = config->FirstChildElement("collision"); col_xml; col_xml = col_xml->NextSiblingElement("collision"))
+  for (tinyxml2::XMLElement *col_xml = config->FirstChildElement("collision"); col_xml; col_xml = col_xml->NextSiblingElement("collision"))
   {
     CollisionSharedPtr col;
     col.reset(new Collision());
     if (parseCollision(*col, col_xml))
-    {      
+    {
       link.collision_array.push_back(col);
     }
     else
     {
       col.reset();
-      std::cerr << "Could not parse collision element for Link [" <<  link.name << "]" << std::endl;
+      std::cerr << "Could not parse collision element for Link [" << link.name << "]" << std::endl;
       return false;
     }
   }
-  
-  // Collision (optional)  
+
+  // Collision (optional)
   // Assign the first collision to the .collision ptr, if it exists
   if (!link.collision_array.empty())
     link.collision = link.collision_array[0];
@@ -488,19 +507,19 @@ bool parseLink(Link &link, tinyxml2::XMLElement* config)
 #ifdef ENABLE_URDF_EXPORT
 
 /* exports */
-bool exportPose(Pose &pose, tinyxml2::XMLElement* xml);
+bool exportPose(Pose &pose, tinyxml2::XMLElement *xml);
 
 bool exportMaterial(Material &material, tinyxml2::XMLElement *xml)
 {
   tinyxml2::XMLElement *material_xml = new tinyxml2::XMLElement("material");
   material_xml->SetAttribute("name", material.name);
 
-  tinyxml2::XMLElement* texture = new tinyxml2::XMLElement("texture");
+  tinyxml2::XMLElement *texture = new tinyxml2::XMLElement("texture");
   if (!material.texture_filename.empty())
     texture->SetAttribute("filename", material.texture_filename);
   material_xml->LinkEndChild(texture);
 
-  tinyxml2::XMLElement* color = new tinyxml2::XMLElement("color");
+  tinyxml2::XMLElement *color = new tinyxml2::XMLElement("color");
   color->SetAttribute("rgba", urdf_export_helpers::values2str(material.color));
   material_xml->LinkEndChild(color);
   xml->LinkEndChild(material_xml);
@@ -603,7 +622,7 @@ bool exportInertial(Inertial &i, tinyxml2::XMLElement *xml)
   inertial_xml->LinkEndChild(inertia_xml);
 
   xml->LinkEndChild(inertial_xml);
-  
+
   return true;
 }
 
@@ -616,7 +635,7 @@ bool exportVisual(Visual &vis, tinyxml2::XMLElement *xml)
   //   </geometry>
   //   <material name="Grey"/>
   // </visual>
-  tinyxml2::XMLElement * visual_xml = new tinyxml2::XMLElement("visual");
+  tinyxml2::XMLElement *visual_xml = new tinyxml2::XMLElement("visual");
 
   exportPose(vis.origin, visual_xml);
 
@@ -630,8 +649,8 @@ bool exportVisual(Visual &vis, tinyxml2::XMLElement *xml)
   return true;
 }
 
-bool exportCollision(Collision &col, tinyxml2::XMLElement* xml)
-{  
+bool exportCollision(Collision &col, tinyxml2::XMLElement *xml)
+{
   // <collision group="default">
   //   <origin rpy="0 0 0" xyz="0 0 0"/>
   //   <geometry>
@@ -639,7 +658,7 @@ bool exportCollision(Collision &col, tinyxml2::XMLElement* xml)
   //   </geometry>
   //   <material name="Grey"/>
   // </collision>
-  tinyxml2::XMLElement * collision_xml = new tinyxml2::XMLElement("collision");
+  tinyxml2::XMLElement *collision_xml = new tinyxml2::XMLElement("collision");
 
   exportPose(col.origin, collision_xml);
 
@@ -650,16 +669,16 @@ bool exportCollision(Collision &col, tinyxml2::XMLElement* xml)
   return true;
 }
 
-bool exportLink(Link &link, tinyxml2::XMLElement* xml)
+bool exportLink(Link &link, tinyxml2::XMLElement *xml)
 {
-  tinyxml2::XMLElement * link_xml = new tinyxml2::XMLElement("link");
+  tinyxml2::XMLElement *link_xml = new tinyxml2::XMLElement("link");
   link_xml->SetAttribute("name", link.name);
 
   if (link.inertial)
     exportInertial(*link.inertial, link_xml);
-  for (std::size_t i = 0 ; i < link.visual_array.size() ; ++i)
+  for (std::size_t i = 0; i < link.visual_array.size(); ++i)
     exportVisual(*link.visual_array[i], link_xml);
-  for (std::size_t i = 0 ; i < link.collision_array.size() ; ++i)
+  for (std::size_t i = 0; i < link.collision_array.size(); ++i)
     exportCollision(*link.collision_array[i], link_xml);
 
   xml->LinkEndChild(link_xml);

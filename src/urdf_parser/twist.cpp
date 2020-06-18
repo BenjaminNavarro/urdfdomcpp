@@ -42,9 +42,9 @@
 #include <iostream>
 #include <tinyxml2.h>
 
-namespace urdf{
+namespace urdf {
 
-bool parseTwist(Twist &twist, tinyxml2::XMLElement* xml)
+bool parseTwist(Twist& twist, tinyxml2::XMLElement* xml)
 {
   twist.clear();
   if (xml)
@@ -52,10 +52,11 @@ bool parseTwist(Twist &twist, tinyxml2::XMLElement* xml)
     const char* linear_char = xml->Attribute("linear");
     if (linear_char != NULL)
     {
-      try {
+      try
+      {
         twist.linear.init(linear_char);
-      }
-      catch (ParseError &e) {
+      } catch (ParseError& e)
+      {
         twist.linear.clear();
         std::cerr << "Malformed linear string [" << linear_char << "]: " << e.what() << std::endl;
         return false;
@@ -65,10 +66,11 @@ bool parseTwist(Twist &twist, tinyxml2::XMLElement* xml)
     const char* angular_char = xml->Attribute("angular");
     if (angular_char != NULL)
     {
-      try {
+      try
+      {
         twist.angular.init(angular_char);
-      }
-      catch (ParseError &e) {
+      } catch (ParseError& e)
+      {
         twist.angular.clear();
         std::cerr << "Malformed angular [" << angular_char << "]: " << e.what() << std::endl;
         return false;
@@ -79,6 +81,3 @@ bool parseTwist(Twist &twist, tinyxml2::XMLElement* xml)
 }
 
 }
-
-
-

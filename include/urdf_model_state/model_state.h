@@ -46,17 +46,17 @@
 #include "urdf_model_state/types.h"
 
 
-namespace urdf{
+namespace urdf {
 
 //round is not defined in C++98
 //So in Visual Studio <= 2012 is necessary to define it
 #ifdef _MSC_VER
-#if (_MSC_VER <= 1700)
+#  if (_MSC_VER <= 1700)
 double round(double value)
 {
-    return (value >= 0.0f)?(floor(value + 0.5f)):(ceil(value - 0.5f));
+  return (value >= 0.0f) ? (floor(value + 0.5f)) : (ceil(value - 0.5f));
 }
-#endif 
+#  endif
 #endif
 
 class Time
@@ -71,10 +71,10 @@ public:
     this->Correct();
   };
 
-  operator double ()
+  operator double()
   {
     return (static_cast<double>(this->sec) +
-            static_cast<double>(this->nsec)*1e-9);
+            static_cast<double>(this->nsec) * 1e-9);
   };
 
   int32_t sec;
@@ -85,6 +85,7 @@ public:
     this->sec = 0;
     this->nsec = 0;
   };
+
 private:
   void Correct()
   {
@@ -142,10 +143,8 @@ public:
   };
 
   std::vector<JointStateSharedPtr> joint_states;
-
 };
 
 }
 
 #endif
-

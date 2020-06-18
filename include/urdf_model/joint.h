@@ -44,7 +44,7 @@
 #include "urdf_model/types.h"
 
 
-namespace urdf{
+namespace urdf {
 
 class Link;
 
@@ -87,14 +87,14 @@ public:
   /// clear variables on construction
   JointSafety() { this->clear(); };
 
-  /// 
+  ///
   /// IMPORTANT:  The safety controller support is very much PR2 specific, not intended for generic usage.
-  /// 
+  ///
   /// Basic safety controller operation is as follows
-  /// 
+  ///
   /// current safety controllers will take effect on joints outside the position range below:
   ///
-  /// position range: [JointSafety::soft_lower_limit  + JointLimits::velocity / JointSafety::k_position, 
+  /// position range: [JointSafety::soft_lower_limit  + JointLimits::velocity / JointSafety::k_position,
   ///                  JointSafety::soft_uppper_limit - JointLimits::velocity / JointSafety::k_position]
   ///
   /// if (joint_position is outside of the position range above)
@@ -117,7 +117,7 @@ public:
   /// Final effort command sent to the joint is saturated by [effort_limit_min,effort_limit_max]
   ///
   /// Please see wiki for more details: http://www.ros.org/wiki/pr2_controller_manager/safety_limits
-  /// 
+  ///
   double soft_upper_limit;
   double soft_lower_limit;
   double k_position;
@@ -166,13 +166,17 @@ public:
 class Joint
 {
 public:
-
   Joint() { this->clear(); };
 
   std::string name;
-  enum
-  {
-    UNKNOWN, REVOLUTE, CONTINUOUS, PRISMATIC, FLOATING, PLANAR, FIXED
+  enum {
+    UNKNOWN,
+    REVOLUTE,
+    CONTINUOUS,
+    PRISMATIC,
+    FLOATING,
+    PLANAR,
+    FIXED
   } type;
 
   /// \brief     type_       meaning of axis_
@@ -193,7 +197,7 @@ public:
   ///   origin specifies the transform from Parent Link to Joint Frame
   std::string parent_link_name;
   /// transform from Parent Link frame to Joint frame
-  Pose  parent_to_joint_origin_transform;
+  Pose parent_to_joint_origin_transform;
 
   /// Joint Dynamics
   JointDynamicsSharedPtr dynamics;

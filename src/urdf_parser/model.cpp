@@ -41,32 +41,32 @@
 #include <iostream>
 #include "urdf_parser/urdf_parser.h"
 
-namespace urdf{
+namespace urdf {
 
 bool parseMaterial(Material &material, tinyxml2::XMLElement *config, bool only_name_is_ok);
 bool parseLink(Link &link, tinyxml2::XMLElement *config);
 bool parseJoint(Joint &joint, tinyxml2::XMLElement *config);
 
-ModelInterfaceSharedPtr  parseURDFFile(const std::string &path)
+ModelInterfaceSharedPtr parseURDFFile(const std::string &path)
 {
-    std::ifstream stream( path.c_str() );
-    if (!stream)
-    {
-      std::cerr << ("File " + path + " does not exist").c_str() << std::endl;
-      return ModelInterfaceSharedPtr();
-    }
+  std::ifstream stream(path.c_str());
+  if (!stream)
+  {
+    std::cerr << ("File " + path + " does not exist").c_str() << std::endl;
+    return ModelInterfaceSharedPtr();
+  }
 
-    std::string xml_str((std::istreambuf_iterator<char>(stream)),
-	                     std::istreambuf_iterator<char>());
-    return urdf::parseURDF( xml_str );
+  std::string xml_str((std::istreambuf_iterator<char>(stream)),
+                      std::istreambuf_iterator<char>());
+  return urdf::parseURDF(xml_str);
 }
 
-bool assignMaterial(const VisualSharedPtr& visual, ModelInterfaceSharedPtr& model, const char* link_name)
+bool assignMaterial(const VisualSharedPtr &visual, ModelInterfaceSharedPtr &model, const char *link_name)
 {
   if (visual->material_name.empty())
     return true;
 
-  const MaterialSharedPtr& material = model->getMaterial(visual->material_name);
+  const MaterialSharedPtr &material = model->getMaterial(visual->material_name);
   if (material)
   {
     std::cout << "urdfdom: setting link '" << link_name << "' material to '" << visual->material_name << "'" << std::endl;
@@ -88,7 +88,7 @@ bool assignMaterial(const VisualSharedPtr& visual, ModelInterfaceSharedPtr& mode
   return true;
 }
 
-ModelInterfaceSharedPtr  parseURDF(const std::string &xml_string)
+ModelInterfaceSharedPtr parseURDF(const std::string &xml_string)
 {
   ModelInterfaceSharedPtr model(new ModelInterface);
   model->clear();
@@ -128,8 +128,7 @@ ModelInterfaceSharedPtr  parseURDF(const std::string &xml_string)
     {
       throw std::runtime_error("Invalid 'version' specified; only version 1.0 is currently supported");
     }
-  }
-  catch (const std::runtime_error & err)
+  } catch (const std::runtime_error &err)
   {
     std::cerr << err.what() << std::endl;
     model.reset();
@@ -137,27 +136,28 @@ ModelInterfaceSharedPtr  parseURDF(const std::string &xml_string)
   }
 
   // Get all Material elements
-  for (tinyxml2::XMLElement* material_xml = robot_xml->FirstChildElement("material"); material_xml; material_xml = material_xml->NextSiblingElement("material"))
+  for (tinyxml2::XMLElement *material_xml = robot_xml->FirstChildElement("material"); material_xml; material_xml = material_xml->NextSiblingElement("material"))
   {
     MaterialSharedPtr material;
     material.reset(new Material);
 
-    try {
+    try
+    {
       parseMaterial(*material, material_xml, false); // material needs to be fully defined here
       if (model->getMaterial(material->name))
       {
-        std::cerr << "material '" <<  material->name.c_str() << "' is not unique." << std::endl;
+        std::cerr << "material '" << material->name.c_str() << "' is not unique." << std::endl;
         material.reset();
         model.reset();
         return model;
       }
       else
       {
-        model->materials_.insert(make_pair(material->name,material));
-        std::cout << "urdfdom: successfully added a new material '" <<  material->name.c_str() << "'" << std::endl;
+        model->materials_.insert(make_pair(material->name, material));
+        std::cout << "urdfdom: successfully added a new material '" << material->name.c_str() << "'" << std::endl;
       }
-    }
-    catch (ParseError &/*e*/) {
+    } catch (ParseError & /*e*/)
+    {
       std::cerr << "material xml is not initialized correctly" << std::endl;
       material.reset();
       model.reset();
@@ -166,50 +166,52 @@ ModelInterfaceSharedPtr  parseURDF(const std::string &xml_string)
   }
 
   // Get all Link elements
-  for (tinyxml2::XMLElement* link_xml = robot_xml->FirstChildElement("link"); link_xml; link_xml = link_xml->NextSiblingElement("link"))
+  for (tinyxml2::XMLElement *link_xml = robot_xml->FirstChildElement("link"); link_xml; link_xml = link_xml->NextSiblingElement("link"))
   {
     LinkSharedPtr link;
     link.reset(new Link);
 
-    try {
+    try
+    {
       parseLink(*link, link_xml);
       if (model->getLink(link->name))
       {
-        std::cerr << "link '" <<  link->name.c_str() << "' is not unique." << std::endl;
+        std::cerr << "link '" << link->name.c_str() << "' is not unique." << std::endl;
         model.reset();
         return model;
       }
       else
       {
         // set link visual(s) material
-        std::cout << "urdfdom: setting link '" <<  link->name.c_str() << "' material" << std::endl;
+        std::cout << "urdfdom: setting link '" << link->name.c_str() << "' material" << std::endl;
         if (link->visual)
         {
           assignMaterial(link->visual, model, link->name.c_str());
         }
-        for (const auto& visual : link->visual_array)
+        for (const auto &visual : link->visual_array)
         {
           assignMaterial(visual, model, link->name.c_str());
         }
 
-        model->links_.insert(make_pair(link->name,link));
-        std::cout << "urdfdom: successfully added a new link '" <<  link->name.c_str() << "'" << std::endl;
+        model->links_.insert(make_pair(link->name, link));
+        std::cout << "urdfdom: successfully added a new link '" << link->name.c_str() << "'" << std::endl;
       }
-    }
-    catch (ParseError &/*e*/) {
+    } catch (ParseError & /*e*/)
+    {
       std::cerr << "link xml is not initialized correctly" << std::endl;
       model.reset();
       return model;
     }
   }
-  if (model->links_.empty()){
+  if (model->links_.empty())
+  {
     std::cerr << "No link elements found in urdf file" << std::endl;
     model.reset();
     return model;
   }
 
   // Get all Joint elements
-  for (tinyxml2::XMLElement* joint_xml = robot_xml->FirstChildElement("joint"); joint_xml; joint_xml = joint_xml->NextSiblingElement("joint"))
+  for (tinyxml2::XMLElement *joint_xml = robot_xml->FirstChildElement("joint"); joint_xml; joint_xml = joint_xml->NextSiblingElement("joint"))
   {
     JointSharedPtr joint;
     joint.reset(new Joint);
@@ -218,14 +220,14 @@ ModelInterfaceSharedPtr  parseURDF(const std::string &xml_string)
     {
       if (model->getJoint(joint->name))
       {
-        std::cerr << "joint '" <<  joint->name.c_str() << "' is not unique." << std::endl;
+        std::cerr << "joint '" << joint->name.c_str() << "' is not unique." << std::endl;
         model.reset();
         return model;
       }
       else
       {
-        model->joints_.insert(make_pair(joint->name,joint));
-        std::cout << "urdfdom: successfully added a new joint '" <<  joint->name.c_str() << "'" << std::endl;
+        model->joints_.insert(make_pair(joint->name, joint));
+        std::cout << "urdfdom: successfully added a new joint '" << joint->name.c_str() << "'" << std::endl;
       }
     }
     else
@@ -243,11 +245,10 @@ ModelInterfaceSharedPtr  parseURDF(const std::string &xml_string)
   parent_link_tree.clear();
 
   // building tree: name mapping
-  try 
+  try
   {
     model->initTree(parent_link_tree);
-  }
-  catch(ParseError &e)
+  } catch (ParseError &e)
   {
     std::cerr << "Failed to build tree: " << e.what() << std::endl;
     model.reset();
@@ -258,14 +259,13 @@ ModelInterfaceSharedPtr  parseURDF(const std::string &xml_string)
   try
   {
     model->initRoot(parent_link_tree);
-  }
-  catch(ParseError &e)
+  } catch (ParseError &e)
   {
     std::cerr << "Failed to find root link: " << e.what() << std::endl;
     model.reset();
     return model;
   }
-  
+
   return model;
 }
 
@@ -274,7 +274,7 @@ ModelInterfaceSharedPtr  parseURDF(const std::string &xml_string)
 bool exportMaterial(Material &material, tinyxml2::XMLElement *config);
 bool exportLink(Link &link, tinyxml2::XMLElement *config);
 bool exportJoint(Joint &joint, tinyxml2::XMLElement *config);
-tinyxml2::XMLDocument*  exportURDF(const ModelInterface &model)
+tinyxml2::XMLDocument *exportURDF(const ModelInterface &model)
 {
   tinyxml2::XMLDocument *doc = new tinyxml2::XMLDocument();
 
@@ -283,28 +283,31 @@ tinyxml2::XMLDocument*  exportURDF(const ModelInterface &model)
   doc->LinkEndChild(robot);
 
 
-  for (std::map<std::string, MaterialSharedPtr>::const_iterator m=model.materials_.begin(); m!=model.materials_.end(); m++)
+  for (std::map<std::string, MaterialSharedPtr>::const_iterator m = model.materials_.begin(); m != model.materials_.end(); m++)
   {
-    std::cout << "urdfdom: exporting material [" << m->second->name.c_str() << "]\n" << std::endl;
+    std::cout << "urdfdom: exporting material [" << m->second->name.c_str() << "]\n"
+              << std::endl;
     exportMaterial(*(m->second), robot);
   }
 
-  for (std::map<std::string, LinkSharedPtr>::const_iterator l=model.links_.begin(); l!=model.links_.end(); l++)  
+  for (std::map<std::string, LinkSharedPtr>::const_iterator l = model.links_.begin(); l != model.links_.end(); l++)
   {
-    std::cout << "urdfdom: exporting link [" << l->second->name.c_str() << "]\n" << std::endl;
+    std::cout << "urdfdom: exporting link [" << l->second->name.c_str() << "]\n"
+              << std::endl;
     exportLink(*(l->second), robot);
   }
-  	
-  for (std::map<std::string, JointSharedPtr>::const_iterator j=model.joints_.begin(); j!=model.joints_.end(); j++)  
+
+  for (std::map<std::string, JointSharedPtr>::const_iterator j = model.joints_.begin(); j != model.joints_.end(); j++)
   {
-    std::cout << "urdfdom: exporting joint [" << j->second->name.c_str() << "]\n" << std::endl;
+    std::cout << "urdfdom: exporting joint [" << j->second->name.c_str() << "]\n"
+              << std::endl;
     exportJoint(*(j->second), robot);
   }
 
   return doc;
 }
-    
-tinyxml2::XMLDocument*  exportURDF(ModelInterfaceSharedPtr &model)
+
+tinyxml2::XMLDocument *exportURDF(ModelInterfaceSharedPtr &model)
 {
   return exportURDF(*model);
 }
@@ -312,4 +315,3 @@ tinyxml2::XMLDocument*  exportURDF(ModelInterfaceSharedPtr &model)
 #endif
 
 }
-

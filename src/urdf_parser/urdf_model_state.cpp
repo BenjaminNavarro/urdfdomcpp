@@ -46,9 +46,9 @@
 #include <iostream>
 #include <tinyxml2.h>
 
-namespace urdf{
+namespace urdf {
 
-bool parseModelState(ModelState &ms, tinyxml2::XMLElement* config)
+bool parseModelState(ModelState &ms, tinyxml2::XMLElement *config)
 {
   ms.clear();
 
@@ -63,10 +63,12 @@ bool parseModelState(ModelState &ms, tinyxml2::XMLElement* config)
   const char *time_stamp_char = config->Attribute("time_stamp");
   if (time_stamp_char)
   {
-    try {
+    try
+    {
       ms.time_stamp.set(strToDouble(time_stamp_char));
-    } catch(std::runtime_error &) {
-      std::cerr << "Parsing time stamp [" <<  time_stamp_char << "] failed" << std::endl;
+    } catch (std::runtime_error &)
+    {
+      std::cerr << "Parsing time stamp [" << time_stamp_char << "] failed" << std::endl;
       return false;
     }
   }
@@ -85,20 +87,24 @@ bool parseModelState(ModelState &ms, tinyxml2::XMLElement* config)
       std::cerr << "No joint name given for the model_state." << std::endl;
       return false;
     }
-    
+
     // parse position
     const char *position_char = joint_state_elem->Attribute("position");
     if (position_char)
     {
 
       std::vector<std::string> pieces;
-      urdf::split_string( pieces, position_char, " ");
-      for (unsigned int i = 0; i < pieces.size(); ++i){
-        if (pieces[i] != ""){
-          try {
+      urdf::split_string(pieces, position_char, " ");
+      for (unsigned int i = 0; i < pieces.size(); ++i)
+      {
+        if (pieces[i] != "")
+        {
+          try
+          {
             joint_state->position.push_back(strToDouble(pieces[i].c_str()));
-          } catch(std::runtime_error &) {
-            throw ParseError("position element ("+ pieces[i] +") is not a valid float");
+          } catch (std::runtime_error &)
+          {
+            throw ParseError("position element (" + pieces[i] + ") is not a valid float");
           }
         }
       }
@@ -110,13 +116,17 @@ bool parseModelState(ModelState &ms, tinyxml2::XMLElement* config)
     {
 
       std::vector<std::string> pieces;
-      urdf::split_string( pieces, velocity_char, " ");
-      for (unsigned int i = 0; i < pieces.size(); ++i){
-        if (pieces[i] != ""){
-          try {
+      urdf::split_string(pieces, velocity_char, " ");
+      for (unsigned int i = 0; i < pieces.size(); ++i)
+      {
+        if (pieces[i] != "")
+        {
+          try
+          {
             joint_state->velocity.push_back(strToDouble(pieces[i].c_str()));
-          } catch(std::runtime_error &) {
-            throw ParseError("velocity element ("+ pieces[i] +") is not a valid float");
+          } catch (std::runtime_error &)
+          {
+            throw ParseError("velocity element (" + pieces[i] + ") is not a valid float");
           }
         }
       }
@@ -128,13 +138,17 @@ bool parseModelState(ModelState &ms, tinyxml2::XMLElement* config)
     {
 
       std::vector<std::string> pieces;
-      urdf::split_string( pieces, effort_char, " ");
-      for (unsigned int i = 0; i < pieces.size(); ++i){
-        if (pieces[i] != ""){
-          try {
+      urdf::split_string(pieces, effort_char, " ");
+      for (unsigned int i = 0; i < pieces.size(); ++i)
+      {
+        if (pieces[i] != "")
+        {
+          try
+          {
             joint_state->effort.push_back(strToDouble(pieces[i].c_str()));
-          } catch(std::runtime_error &) {
-            throw ParseError("effort element ("+ pieces[i] +") is not a valid float");
+          } catch (std::runtime_error &)
+          {
+            throw ParseError("effort element (" + pieces[i] + ") is not a valid float");
           }
         }
       }
@@ -147,7 +161,4 @@ bool parseModelState(ModelState &ms, tinyxml2::XMLElement* config)
 }
 
 
-
 }
-
-

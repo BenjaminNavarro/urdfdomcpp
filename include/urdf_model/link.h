@@ -45,22 +45,29 @@
 #include "color.h"
 #include "types.h"
 
-namespace urdf{
+namespace urdf {
 
 class Geometry
 {
 public:
-  enum {SPHERE, BOX, CYLINDER, MESH} type;
+  enum { SPHERE,
+         BOX,
+         CYLINDER,
+         MESH } type;
 
   virtual ~Geometry(void)
   {
-  }  
+  }
 };
 
 class Sphere : public Geometry
 {
 public:
-  Sphere() { this->clear(); type = SPHERE; };
+  Sphere()
+  {
+    this->clear();
+    type = SPHERE;
+  };
   double radius;
 
   void clear()
@@ -72,7 +79,11 @@ public:
 class Box : public Geometry
 {
 public:
-  Box() { this->clear(); type = BOX; };
+  Box()
+  {
+    this->clear();
+    type = BOX;
+  };
   Vector3 dim;
 
   void clear()
@@ -84,7 +95,11 @@ public:
 class Cylinder : public Geometry
 {
 public:
-  Cylinder() { this->clear(); type = CYLINDER; };
+  Cylinder()
+  {
+    this->clear();
+    type = CYLINDER;
+  };
   double length;
   double radius;
 
@@ -98,7 +113,11 @@ public:
 class Mesh : public Geometry
 {
 public:
-  Mesh() { this->clear(); type = MESH; };
+  Mesh()
+  {
+    this->clear();
+    type = MESH;
+  };
   std::string filename;
   Vector3 scale;
 
@@ -134,7 +153,7 @@ public:
   Inertial() { this->clear(); };
   Pose origin;
   double mass;
-  double ixx,ixy,ixz,iyy,iyz,izz;
+  double ixx, ixy, ixz, iyy, iyz, izz;
 
   void clear()
   {
@@ -181,7 +200,6 @@ public:
   };
 
   std::string name;
-
 };
 
 
@@ -216,11 +234,15 @@ public:
   std::vector<LinkSharedPtr> child_links;
 
   LinkSharedPtr getParent() const
-  {return parent_link_.lock();};
+  {
+    return parent_link_.lock();
+  };
 
   void setParent(const LinkSharedPtr &parent)
-  { parent_link_ = parent; }
-  
+  {
+    parent_link_ = parent;
+  }
+
   void clear()
   {
     this->name.clear();
@@ -236,10 +258,7 @@ public:
 
 private:
   LinkWeakPtr parent_link_;
-
 };
-
-
 
 
 }

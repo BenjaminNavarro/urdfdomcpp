@@ -39,13 +39,13 @@
 #include <string>
 #include <stdexcept>
 
-namespace urdf
-{
+namespace urdf {
 
-class ParseError: public std::runtime_error
+class ParseError : public std::runtime_error
 {
 public:
-  ParseError(const std::string &error_msg) : std::runtime_error(error_msg) {};
+  ParseError(const std::string &error_msg)
+  : std::runtime_error(error_msg){};
 };
 
 }

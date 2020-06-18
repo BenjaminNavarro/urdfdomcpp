@@ -57,7 +57,6 @@
 */
 
 
-
 #ifndef URDF_SENSOR_H
 #define URDF_SENSOR_H
 
@@ -70,12 +69,13 @@
 #include "urdf_model/types.h"
 #include "urdf_sensor/types.h"
 
-namespace urdf{
+namespace urdf {
 
 class VisualSensor
 {
 public:
-  enum {CAMERA, RAY} type;
+  enum { CAMERA,
+         RAY } type;
   virtual ~VisualSensor(void)
   {
   }
@@ -155,11 +155,15 @@ public:
   std::string parent_link_name;
 
   LinkSharedPtr getParent() const
-  {return parent_link_.lock();};
+  {
+    return parent_link_.lock();
+  };
 
   void setParent(LinkSharedPtr parent)
-  {  this->parent_link_ = parent; }
-  
+  {
+    this->parent_link_ = parent;
+  }
+
   void clear()
   {
     this->name.clear();
@@ -170,7 +174,6 @@ public:
 
 private:
   LinkWeakPtr parent_link_;
-
 };
 }
 #endif

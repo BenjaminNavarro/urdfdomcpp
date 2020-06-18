@@ -47,70 +47,72 @@ namespace urdf_export_helpers {
 
 std::string values2str(unsigned int count, const double *values, double (*conv)(double))
 {
-    std::stringstream ss;
-    for (unsigned int i = 0 ; i < count ; i++)
-    {
-        if (i > 0)
-            ss << " ";
-        ss << (conv ? conv(values[i]) : values[i]);
-    }
-    return ss.str();
+  std::stringstream ss;
+  for (unsigned int i = 0; i < count; i++)
+  {
+    if (i > 0)
+      ss << " ";
+    ss << (conv ? conv(values[i]) : values[i]);
+  }
+  return ss.str();
 }
 std::string values2str(urdf::Vector3 vec)
 {
-    double xyz[3];
-    xyz[0] = vec.x;
-    xyz[1] = vec.y;
-    xyz[2] = vec.z;
-    return values2str(3, xyz);
+  double xyz[3];
+  xyz[0] = vec.x;
+  xyz[1] = vec.y;
+  xyz[2] = vec.z;
+  return values2str(3, xyz);
 }
 std::string values2str(urdf::Rotation rot)
 {
-    double rpy[3];
-    rot.getRPY(rpy[0], rpy[1], rpy[2]);
-    return values2str(3, rpy);
+  double rpy[3];
+  rot.getRPY(rpy[0], rpy[1], rpy[2]);
+  return values2str(3, rpy);
 }
 std::string values2str(urdf::Color c)
 {
-    double rgba[4];
-    rgba[0] = c.r;
-    rgba[1] = c.g;
-    rgba[2] = c.b;
-    rgba[3] = c.a;
-    return values2str(4, rgba);
+  double rgba[4];
+  rgba[0] = c.r;
+  rgba[1] = c.g;
+  rgba[2] = c.b;
+  rgba[3] = c.a;
+  return values2str(4, rgba);
 }
 std::string values2str(double d)
 {
-    return values2str(1, &d);
+  return values2str(1, &d);
 }
 }
 
-namespace urdf{
+namespace urdf {
 
-bool parsePose(Pose &pose, tinyxml2::XMLElement* xml)
+bool parsePose(Pose &pose, tinyxml2::XMLElement *xml)
 {
   pose.clear();
   if (xml)
   {
-    const char* xyz_str = xml->Attribute("xyz");
+    const char *xyz_str = xml->Attribute("xyz");
     if (xyz_str != NULL)
     {
-      try {
+      try
+      {
         pose.position.init(xyz_str);
-      }
-      catch (ParseError &e) {
+      } catch (ParseError &e)
+      {
         std::cerr << e.what() << std::endl;
         return false;
       }
     }
 
-    const char* rpy_str = xml->Attribute("rpy");
+    const char *rpy_str = xml->Attribute("rpy");
     if (rpy_str != NULL)
     {
-      try {
+      try
+      {
         pose.rotation.init(rpy_str);
-      }
-      catch (ParseError &e) {
+      } catch (ParseError &e)
+      {
         std::cerr << e.what() << std::endl;
         return false;
       }
@@ -121,7 +123,7 @@ bool parsePose(Pose &pose, tinyxml2::XMLElement* xml)
 
 #ifdef ENABLE_URDF_EXPORT
 
-bool exportPose(Pose &pose, tinyxml2::XMLElement* xml)
+bool exportPose(Pose &pose, tinyxml2::XMLElement *xml)
 {
   tinyxml2::XMLElement *origin = new tinyxml2::XMLElement("origin");
   std::string pose_xyz_str = urdf_export_helpers::values2str(pose.position);
@@ -135,5 +137,3 @@ bool exportPose(Pose &pose, tinyxml2::XMLElement* xml)
 #endif
 
 }
-
-

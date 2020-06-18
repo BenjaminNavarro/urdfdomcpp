@@ -79,7 +79,7 @@
 #include "urdf_model/twist.h"
 #include "urdf_world/types.h"
 
-namespace urdf{
+namespace urdf {
 
 class Entity
 {
@@ -107,4 +107,3 @@ public:
 }
 
 #endif
-

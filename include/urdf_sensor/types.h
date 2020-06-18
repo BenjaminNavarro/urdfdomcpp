@@ -40,7 +40,7 @@
 #include <memory>
 
 
-namespace urdf{
+namespace urdf {
 
 class VisualSensor;
 

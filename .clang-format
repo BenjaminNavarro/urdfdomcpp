@@ -1,0 +1,19 @@
+# Style extracted using whatstyle.py on the original code base
+BasedOnStyle: Mozilla
+AlignConsecutiveMacros: true
+AlignEscapedNewlines: DontAlign
+AllowShortIfStatementsOnASingleLine: true
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+BraceWrapping:
+  AfterClass: true
+  AfterControlStatement: true
+  AfterFunction: true
+  BeforeElse: true
+BreakBeforeBraces: Custom
+ColumnLimit: 0
+ConstructorInitializerIndentWidth: 0
+DerivePointerAlignment: true
+IndentPPDirectives: AfterHash
+MaxEmptyLinesToKeep: 2
+SortIncludes: false

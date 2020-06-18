@@ -5,21 +5,26 @@
 
 #include <urdf_parser/urdf_parser.h>
 
-#define EXPECT_THROW_OF_TYPE(type, statement, msg)                         \
-  do {                                                                     \
-    try {                                                                  \
-      statement;                                                           \
-    } catch (const type & err) {                                           \
-      if (std::string(err.what()).find(msg) == std::string::npos) {        \
-        FAIL() << "Expected error msg containing:" << std::endl            \
-               << msg << std::endl                                         \
-               << "Saw error msg:" << std::endl                            \
-               << err.what() << std::endl;                                 \
-      }                                                                    \
-    } catch (const std::exception & err) {                                 \
-      FAIL() << "Expected " #type << std::endl                             \
+#define EXPECT_THROW_OF_TYPE(type, statement, msg) \
+  do \
+  { \
+    try \
+    { \
+      statement; \
+    } catch (const type& err) \
+    { \
+      if (std::string(err.what()).find(msg) == std::string::npos) \
+      { \
+        FAIL() << "Expected error msg containing:" << std::endl \
+               << msg << std::endl \
+               << "Saw error msg:" << std::endl \
+               << err.what() << std::endl; \
+      } \
+    } catch (const std::exception& err) \
+    { \
+      FAIL() << "Expected " #type << std::endl \
              << "Saw exception type: " << typeid(err).name() << std::endl; \
-    }                                                                      \
+    } \
   } while (0)
 
 #define EXPECT_RUNTIME_THROW(st, msg) \

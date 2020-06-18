@@ -137,13 +137,13 @@ private:
 
 }
 
-namespace urdf{
+namespace urdf {
 
-  URDFDOM_DLLAPI ModelInterfaceSharedPtr parseURDF(const std::string &xml_string);
-  URDFDOM_DLLAPI ModelInterfaceSharedPtr parseURDFFile(const std::string &path);
-  URDFDOM_DLLAPI tinyxml2::XMLDocument*  exportURDF(ModelInterfaceSharedPtr &model);
-  URDFDOM_DLLAPI tinyxml2::XMLDocument*  exportURDF(const ModelInterface &model);
-  URDFDOM_DLLAPI bool parsePose(Pose&, tinyxml2::XMLElement*);
+URDFDOM_DLLAPI ModelInterfaceSharedPtr parseURDF(const std::string &xml_string);
+URDFDOM_DLLAPI ModelInterfaceSharedPtr parseURDFFile(const std::string &path);
+URDFDOM_DLLAPI tinyxml2::XMLDocument *exportURDF(ModelInterfaceSharedPtr &model);
+URDFDOM_DLLAPI tinyxml2::XMLDocument *exportURDF(const ModelInterface &model);
+URDFDOM_DLLAPI bool parsePose(Pose &, tinyxml2::XMLElement *);
 }
 
 #endif

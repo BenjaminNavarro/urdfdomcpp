@@ -43,9 +43,9 @@
 #include <algorithm>
 #include <tinyxml2.h>
 
-namespace urdf{
+namespace urdf {
 
-bool parseWorld(World &/*world*/, tinyxml2::XMLElement* /*config*/)
+bool parseWorld(World& /*world*/, tinyxml2::XMLElement* /*config*/)
 {
 
   // to be implemented
@@ -55,9 +55,9 @@ bool parseWorld(World &/*world*/, tinyxml2::XMLElement* /*config*/)
 
 #ifdef ENABLE_URDF_EXPORT
 
-bool exportWorld(World &world, tinyxml2::XMLElement* xml)
+bool exportWorld(World& world, tinyxml2::XMLElement* xml)
 {
-  tinyxml2::XMLElement * world_xml = new tinyxml2::XMLElement("world");
+  tinyxml2::XMLElement* world_xml = new tinyxml2::XMLElement("world");
   world_xml->SetAttribute("name", world.name);
 
   // to be implemented
