@@ -1,6 +1,10 @@
 file(GLOB urdfdomcpp_FILES ${CMAKE_CURRENT_SOURCE_DIR}/urdf_parser/*.cpp)
 
-add_library(urdfdomcpp SHARED ${urdfdomcpp_FILES})
+if(BUILD_SHARED_LIBRARY)
+    add_library(urdfdomcpp SHARED ${urdfdomcpp_FILES})
+else()
+    add_library(urdfdomcpp STATIC ${urdfdomcpp_FILES})
+endif()
 
 target_include_directories(
     urdfdomcpp 
