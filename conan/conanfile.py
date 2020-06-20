@@ -21,8 +21,11 @@ class UrdfdomcppConan(ConanFile):
     def build(self):
         cmake = CMake(self)
         cmake.definitions["urdfdomcpp_ENABLE_CONAN"] = True
+        cmake.definitions["ENABLE_TESTING"] = True
         cmake.configure(source_folder="urdfdomcpp")
         cmake.build()
+        cmake.test()
+        cmake.install()
 
     def package(self):
         self.copy("*.h", dst="include", src="urdfdomcpp/include")
