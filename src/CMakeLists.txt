@@ -13,9 +13,9 @@ target_include_directories(
 target_compile_features(urdfdomcpp PUBLIC cxx_std_11)
 
 if(${PROJECT_NAME}_ENABLE_CONAN)
-    target_link_libraries(urdfdomcpp PRIVATE CONAN_PKG::tinyxml2)
+    target_link_libraries(urdfdomcpp PUBLIC CONAN_PKG::tinyxml2)
 else()
-    target_link_libraries(urdfdomcpp PRIVATE tinyxml2::tinyxml2)
+    target_link_libraries(urdfdomcpp PUBLIC tinyxml2::tinyxml2)
 endif()
 
 install(
