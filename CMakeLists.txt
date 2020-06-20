@@ -7,16 +7,18 @@ project(
     DESCRIPTION "A non-ROS version of urdfdom"
     LANGUAGES CXX)
 
-# Use conan to gather dependencies
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup(TARGETS)
+# Use conan to gather dependencies if enabled
+include(cmake/Conan.cmake)
+
+# Otherwise fallback to system dependencies
+if(NOT ${PROJECT_NAME}_ENABLE_CONAN)
+    find_package(tinyxml2)
+endif()
 
 option(ENABLE_TESTING "Enable test compilation" OFF)
 if(ENABLE_TESTING)
     enable_testing()
 endif()
-
-option(BUILD_SHARED_LIBRARY "Build the library as a shared one" ON)
 
 # Process the src and apps directories
 add_subdirectory(src)

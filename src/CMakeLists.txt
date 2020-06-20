@@ -1,10 +1,7 @@
 file(GLOB urdfdomcpp_FILES ${CMAKE_CURRENT_SOURCE_DIR}/urdf_parser/*.cpp)
 
-if(BUILD_SHARED_LIBRARY)
-    add_library(urdfdomcpp SHARED ${urdfdomcpp_FILES})
-else()
-    add_library(urdfdomcpp STATIC ${urdfdomcpp_FILES})
-endif()
+# will be a shared or static library depending on BUILD_SHARED_LIBS
+add_library(urdfdomcpp ${urdfdomcpp_FILES})
 
 target_include_directories(
     urdfdomcpp 
@@ -15,7 +12,11 @@ target_include_directories(
 
 target_compile_features(urdfdomcpp PUBLIC cxx_std_11)
 
-target_link_libraries(urdfdomcpp PRIVATE CONAN_PKG::tinyxml2)
+if(${PROJECT_NAME}_ENABLE_CONAN)
+    target_link_libraries(urdfdomcpp PRIVATE CONAN_PKG::tinyxml2)
+else()
+    target_link_libraries(urdfdomcpp PRIVATE tinyxml2::tinyxml2)
+endif()
 
 install(
     TARGETS urdfdomcpp
