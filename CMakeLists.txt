@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.8)
 
 # Project description
 project(
@@ -7,13 +7,16 @@ project(
     DESCRIPTION "A non-ROS version of urdfdom"
     LANGUAGES CXX)
 
-# Use conan to gather dependencies if enabled
+# Set the build type to release if not specified by the user    
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+# Use conan to gather dependencies
 include(cmake/Conan.cmake)
 
-# Otherwise fallback to system dependencies
-if(NOT ${PROJECT_NAME}_ENABLE_CONAN)
-    find_package(tinyxml2)
-endif()
+# Add static analyzers support
+include(cmake/StaticAnalyzers.cmake)
 
 option(ENABLE_TESTING "Enable test compilation" OFF)
 if(ENABLE_TESTING)
