@@ -26,7 +26,7 @@ class UrdfdomcppConan(ConanFile):
             del self.options.fPIC
 
     def source(self):
-        self.run("git clone https://github.com/BenjaminNavarro/urdfdomcpp.git")
+        self.run("git clone https://github.com/BenjaminNavarro/urdfdomcpp.git --branch v1.0.0")
 
     def build(self):
         cmake = CMake(self)

@@ -1,5 +1,7 @@
 # URDFDOMCPP
 
+[ ![Download](https://api.bintray.com/packages/benjaminnavarro/bnavarro/urdfdomcpp%3Abnavarro/images/download.svg?version=1.0%3Astable) ](https://bintray.com/benjaminnavarro/bnavarro/urdfdomcpp%3Abnavarro/1.0%3Astable/link)
+
 This library is a partial rewrite of [urdfdom](https://github.com/ros/urdfdom) and [urdfdom_headers](https://github.com/ros/urdfdom_headers) without any ROS code and upgraded to [TinyXML2](https://github.com/leethomason/tinyxml2). It is intended to simplify the parsing of URDF files outside of a ROS environment.
 
 ## Getting started
