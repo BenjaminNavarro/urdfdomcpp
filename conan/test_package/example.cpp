@@ -40,6 +40,88 @@
 
 using namespace urdf;
 
+std::string model = R"(
+<robot name="XYZSarm">
+    <link name="b0">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <mass value="1"/>
+            <inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.05" iyz="0.0" izz="0.001"/>
+        </inertial>
+        <visual>
+            <origin rpy="0. 0. 0." xyz=".1 .2 .3"/>
+            <geometry>
+                <mesh filename="test_mesh1.dae"/>
+            </geometry>
+        </visual>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="test_mesh2.dae"/>
+            </geometry>
+        </visual>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </visual>
+    </link>
+    <link name="b1">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0.5 0"/>
+            <mass value="5."/>
+            <inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.05" iyz="0.0" izz="0.001"/>
+        </inertial>
+    </link>
+    <link name="b2">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0.5 0"/>
+            <mass value="2."/>
+            <inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.05" iyz="0.0" izz="0.001"/>
+        </inertial>
+    </link>
+    <link name="b3">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0.5 0"/>
+            <mass value="1.5"/>
+            <inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.05" iyz="0.0" izz="0.001"/>
+        </inertial>
+    </link>
+    <link name="b4">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.5 0 0"/>
+            <mass value="1"/>
+            <inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="0.05" iyz="0.0" izz="0.001"/>
+        </inertial>
+    </link>
+    <joint name="j0" type="revolute">
+        <parent link="b0"/>
+        <child link="b1"/>
+        <origin rpy="0 0 0" xyz="0 1 0"/>
+        <axis xyz="1 0 0"/>
+        <limit lower="-1" upper="1" velocity="10" effort="50"/>
+    </joint>
+    <joint name="j1" type="revolute">
+        <parent link="b1"/>
+        <child link="b2"/>
+        <origin rpy="0 0 0" xyz="0 1 0"/>
+        <axis xyz="0 1 0"/>
+        <limit lower="-1" upper="1" velocity="10" effort="50"/>
+    </joint>
+    <joint name="j2" type="revolute">
+        <parent link="b2"/>
+        <child link="b3"/>
+        <origin rpy="0 0 0" xyz="0 1 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-1" upper="1" velocity="10" effort="50"/>
+    </joint>
+    <joint name="j3" type="continuous">
+        <parent link="b1"/>
+        <child link="b4"/>
+        <origin rpy="1. 0 0" xyz="1 0 0"/>
+        <axis xyz="1 0 0"/>
+    </joint>
+</robot>
+)";
+
 void printTree(LinkConstSharedPtr link, int level = 0) {
   level += 2;
   int count = 0;
@@ -63,21 +145,7 @@ void printTree(LinkConstSharedPtr link, int level = 0) {
 }
 
 int main(int argc, char **argv) {
-  if (argc < 2) {
-    std::cerr << "Expect URDF xml file to parse" << std::endl;
-    return -1;
-  }
-
-  std::string xml_string;
-  std::fstream xml_file(argv[1], std::fstream::in);
-  while (xml_file.good()) {
-    std::string line;
-    std::getline(xml_file, line);
-    xml_string += (line + "\n");
-  }
-  xml_file.close();
-
-  ModelInterfaceSharedPtr robot = parseURDF(xml_string);
+  ModelInterfaceSharedPtr robot = parseURDF(model);
   if (!robot) {
     std::cerr << "ERROR: Model Parsing the xml failed" << std::endl;
     return -1;
