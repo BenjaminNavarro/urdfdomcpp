@@ -141,8 +141,10 @@ namespace urdf {
 
 URDFDOM_DLLAPI ModelInterfaceSharedPtr parseURDF(const std::string &xml_string);
 URDFDOM_DLLAPI ModelInterfaceSharedPtr parseURDFFile(const std::string &path);
+#ifdef ENABLE_URDF_EXPORT
 URDFDOM_DLLAPI tinyxml2::XMLDocument *exportURDF(ModelInterfaceSharedPtr &model);
 URDFDOM_DLLAPI tinyxml2::XMLDocument *exportURDF(const ModelInterface &model);
+#endif
 URDFDOM_DLLAPI bool parsePose(Pose &, tinyxml2::XMLElement *);
 }
 
