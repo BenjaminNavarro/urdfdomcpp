@@ -14,7 +14,7 @@ class UrdfdomcppConan(ConanFile):
     default_options = {"shared": False, "fPIC": True, "build_tests": False}
     generators = "cmake"
     requires = "tinyxml2/8.0.0"
-    build_requires = "cmake/[>=3.8]"
+    build_requires = "cmake/[>=3.10]"
 
     def requirements(self):
         if self.options.build_tests:
