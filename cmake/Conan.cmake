@@ -6,15 +6,10 @@ if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
 endif()
 
 include(${CMAKE_BINARY_DIR}/conan.cmake)
-  
-conan_add_remote(
-    NAME bnavarro
-    URL https://api.bintray.com/conan/benjaminnavarro/bnavarro
-)
 
 conan_add_remote(
-    NAME public-conan
-    URL https://api.bintray.com/conan/bincrafters/public-conan
+    NAME bnavarro
+    URL https://navarrob.jfrog.io/artifactory/api/conan/navarrob-conan
 )
 
 if(ENABLE_TESTING)

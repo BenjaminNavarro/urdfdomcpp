@@ -12,6 +12,6 @@ If your Conan version is lower than 2.0, it is preferred to set the environment 
 
 In order to use urdfdomcpp in your Conan project add the associated remote:
 ```
-conan remote add bnavarro https://api.bintray.com/conan/benjaminnavarro/bnavarro
+conan remote add bnavarro https://bnavarro.jfrog.io/artifactory/api/conan/bnavarro 
 ```
 And then add `urdfdomcpp/0.1@bnavarro/stable` to your Conan dependencies.

@@ -10,23 +10,25 @@ class UrdfdomcppConan(ConanFile):
     description = "A non-ROS version of urdfdom"
     topics = ("c++", "urdf")
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False], "fPIC": [True, False], "build_tests": [True, False]}
+    options = {"shared": [True, False], "fPIC": [
+        True, False], "build_tests": [True, False]}
     default_options = {"shared": False, "fPIC": True, "build_tests": False}
     generators = "cmake"
     requires = "tinyxml2/8.0.0"
-    build_requires = "cmake/[>=3.10]"
+    # build_requires = "cmake/[>=3.10]"
 
     def requirements(self):
         if self.options.build_tests:
             self.requires("gtest/1.10.0")
-            self.requires("cppcheck_installer/2.0@bincrafters/stable")
+            # self.requires("cppcheck/2.6")
 
     def configure(self):
         if self.settings.compiler == 'Visual Studio':
             del self.options.fPIC
 
     def source(self):
-        self.run("git clone https://github.com/BenjaminNavarro/urdfdomcpp.git --branch v1.0.0")
+        self.run(
+            "git clone https://github.com/BenjaminNavarro/urdfdomcpp.git --branch v1.0.0")
 
     def build(self):
         cmake = CMake(self)
@@ -50,4 +52,3 @@ class UrdfdomcppConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = ["urdfdomcpp"]
-
