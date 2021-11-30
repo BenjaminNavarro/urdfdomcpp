@@ -14,7 +14,7 @@ if(ENABLE_TESTING)
     foreach(test ${tests})
         add_executable(${test} ${test}.cpp)
 
-        target_link_libraries(${test} CONAN_PKG::gtest urdfdomcpp)
+        target_link_libraries(${test} GTest::gtest GTest::gtest_main urdfdomcpp)
         if (UNIX)
             target_link_libraries(${test} pthread)
         endif()

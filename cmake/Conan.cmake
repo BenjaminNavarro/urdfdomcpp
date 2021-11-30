@@ -1,7 +1,7 @@
 # Automatically downloads conan.cmake if not already present
 if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
     message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-    file(DOWNLOAD   https://github.com/conan-io/cmake-conan/raw/v0.15/conan.cmake
+    file(DOWNLOAD   https://raw.githubusercontent.com/conan-io/cmake-conan/0.17.0/conan.cmake
                     ${CMAKE_BINARY_DIR}/conan.cmake)
 endif()
 
@@ -20,7 +20,7 @@ endif()
 
 conan_cmake_run(
     CONANFILE conan/conanfile.py
-    BASIC_SETUP CMAKE_TARGETS
+    GENERATORS cmake_find_package
     BUILD missing
     OPTIONS urdfdomcpp:build_tests=${conan_build_tests}
 )

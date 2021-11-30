@@ -19,7 +19,7 @@ class UrdfdomcppConan(ConanFile):
 
     def requirements(self):
         if self.options.build_tests:
-            self.requires("gtest/1.10.0")
+            self.requires("gtest/1.11.0")
             # self.requires("cppcheck/2.6")
 
     def configure(self):
@@ -28,12 +28,13 @@ class UrdfdomcppConan(ConanFile):
 
     def source(self):
         self.run(
-            "git clone https://github.com/BenjaminNavarro/urdfdomcpp.git --branch v1.0.0")
+            "git clone https://github.com/BenjaminNavarro/urdfdomcpp.git --branch v1.0.1")
 
     def build(self):
         cmake = CMake(self)
         if self.options.build_tests:
             cmake.definitions["ENABLE_TESTING"] = True
+        cmake.definitions["USE_SYSTEM_DEPENDENCIES"] = False
         cmake.configure(source_folder="urdfdomcpp")
         cmake.build()
         if self.options.build_tests:
